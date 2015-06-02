@@ -7,7 +7,7 @@ visualize price and volume movements in a dividends payment day
 - *License:* GNU General Public License
 - *GUADALAJARA, INGENIERÍA FINANCIERA ITESO
 
-### Here's an example:
+### Here is an example:
 for stock *Fomento Económico Mexicano S.A.B. de C.V.* **(UBD Series)**:
 
 ``` R
@@ -19,3 +19,6 @@ ticker      <- "FEMSAUBD.MX"            # Exactly as it appears in Yahoo Finance
 Note that the *ticker* must be written as **exactly** as it appears in **Yahoo Finance**
 
 And in order to avoid failures you must write dates in this format **yyyy-mm-dd**
+
+### Here is the result:
+![PriceVolumeDividends](/PriceDividends(Example).png?raw=true)
