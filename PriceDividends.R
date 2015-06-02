@@ -1,3 +1,8 @@
+# -- Initial Developer: FranciscoME --------------------------------------------------- #
+# -- License: GNU General Public License ---------------------------------------------- #
+# -- GDL-ITESO Ingeniería Financiera -------------------------------------------------- #
+
+# -- Load required packages and suppress messages at console -------------------------- #
 
 suppressMessages(library (grid))        # Grid modifications for plotting
 suppressMessages(library (gridExtra))   # Extra grid for text positioning 
@@ -46,6 +51,7 @@ for(j in 1:length(DFDividend$Date))                  # Counter for Dividends Dat
     }
   }
 }
+
 Match  <- na.omit(Match)                             # Remove rows with "NA"
 Events <- data.frame(DFPrices$Date[Match],
 DFPrices$Volume[Match],DFPrices$AdjClose[Match])
@@ -55,6 +61,9 @@ for(i in 1:length(Events$Date))                      # Add Dividend to events
 {
   Events$Dividends[i] <- DFDividend$Dividend[which(DFDividend$Date == Dates[i])]
 }
+
+# -- Data preparation prior to build the plot ----------------------------------------- #
+
 ValDate <- as.Date(Events$Date)
 Values  <- as.numeric(Events$Date)
 Ymin    <- round(min(DFPrices$AdjClose),2)
@@ -66,6 +75,8 @@ colnames(PriceVolumeSimple) <- c("Date","AdjClose","Volume")
 
 PriceVolume <- melt(PriceVolumeSimple, id = "Date", 
 variable.name = "InfoType", value.name = "Values")
+
+# -- Plot ----------------------------------------------------------------------------- #
 
 ggPriceVolume <- ggplot(PriceVolume,  aes(x = Date, y = Value), group = InfoType) + 
   geom_line(colour = "dark green ", size = .75, alpha = .8) + 
