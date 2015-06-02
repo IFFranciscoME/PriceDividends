@@ -21,4 +21,4 @@ Note that the *ticker* must be written as **exactly** as it appears in **Yahoo F
 And in order to avoid failures you must write dates in this format **yyyy-mm-dd**
 
 ### Here is the result:
-![PriceVolumeDividends](/PriceDividends(Example).png?raw=true)
+![PriceVolumeDividends](/Example.png?raw=true)
