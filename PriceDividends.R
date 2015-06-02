@@ -20,7 +20,7 @@ suppressMessages(library (zoo))         # Time series utilities
 
 InitialDate <- Sys.Date()-1000          # System Current Date - 1000 days
 FinalDate   <- Sys.Date()               # System Current Date
-ticker      <- "GFINBURO.MX"            # Exactly as it appears in Yahoo Finance
+ticker      <- "FEMSAUBD.MX"            # Exactly as it appears in Yahoo Finance
 
 # -- Get Dividends -------------------------------------------------------------------- #
 
@@ -53,9 +53,7 @@ for(j in 1:length(DFDividend$Date))                  # Counter for Dividends Dat
 }
 
 Match  <- na.omit(Match)                             # Remove rows with "NA"
-Events <- data.frame(DFPrices$Date[Match],
-DFPrices$Volume[Match],DFPrices$AdjClose[Match])
-colnames(Events) <- c("Date","Volume","AdjClose")    # Events Matched (Prices)
+Events <- DFPrices[Match,]
 Dates  <- DFPrices$Date[Match]                       # Events Matched (Dates)
 for(i in 1:length(Events$Date))                      # Add Dividend to events
 {
@@ -64,13 +62,15 @@ for(i in 1:length(Events$Date))                      # Add Dividend to events
 
 # -- Data preparation prior to build the plot ----------------------------------------- #
 
+EventsTable <- tableGrob(Events,show.rownames = FALSE, h.even.alpha=0.75,
+h.odd.alpha=0.75,v.even.alpha=0.75,v.odd.alpha=0.75,gp = gpar(fontsize=10))
 ValDate <- as.Date(Events$Date)
 Values  <- as.numeric(Events$Date)
 Ymin    <- round(min(DFPrices$AdjClose),2)
 Ymax    <- round(max(DFPrices$AdjClose),2)
 Ynum    <- round((Ymax-Ymin)/10,2)
 
-PriceVolumeSimple <- cbind(DFPrices[,c(1,7)],(DFPrices$Volume)/1000)
+PriceVolumeSimple <- cbind(DFPrices[,c(1,7)],(DFPrices$Volume))
 colnames(PriceVolumeSimple) <- c("Date","AdjClose","Volume")
 
 PriceVolume <- melt(PriceVolumeSimple, id = "Date", 
@@ -78,7 +78,7 @@ variable.name = "InfoType", value.name = "Values")
 
 # -- Plot ----------------------------------------------------------------------------- #
 
-ggPriceVolume <- ggplot(PriceVolume,  aes(x = Date, y = Value), group = InfoType) + 
+ggPriceVolume <- ggplot(PriceVolume,  aes(x = Date, y = Values), group = InfoType) + 
   geom_line(colour = "dark green ", size = .75, alpha = .8) + 
   labs(title = paste("Price & Volume When Dividends",ticker)) +
   facet_grid(InfoType ~ ., scales = "free_y") +
@@ -95,5 +95,10 @@ ggPriceVolume <- ggplot(PriceVolume,  aes(x = Date, y = Value), group = InfoType
   panel.border=element_rect(linetype = 1, colour = "black", fill = NA)) + 
   scale_y_continuous(labels = comma)                  +
   scale_x_date(breaks = ValDate, labels = date_format("%m/%y")) +
-  geom_vline(xintercept=Values, linetype = 5,size=.5,colour="dark grey",alpha = 0.9)
-ggPriceVolume
+  geom_vline(xintercept=Values, linetype = 5,size=.75,colour="dark grey",alpha = 0.8)
+
+grid.newpage()
+subvp <- viewport(width = 0.25, height = 0.3, x = 0.75, y = 0.4)
+print(ggPriceVolume)
+pushViewport(subvp)
+grid.draw(EventsTable)
