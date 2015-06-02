@@ -97,6 +97,8 @@ ggPriceVolume <- ggplot(PriceVolume,  aes(x = Date, y = Values), group = InfoTyp
   scale_x_date(breaks = ValDate, labels = date_format("%m/%y")) +
   geom_vline(xintercept=Values, linetype = 5,size=.75,colour="dark grey",alpha = 0.8)
 
+# -- Arrange grid for include Table with data ----------------------------------------- #
+
 grid.newpage()
 subvp <- viewport(width = 0.25, height = 0.3, x = 0.75, y = 0.4)
 print(ggPriceVolume)
